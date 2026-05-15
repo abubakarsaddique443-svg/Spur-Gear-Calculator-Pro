@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+  <title>Professional Spur Gear Calculator | Complete Report</title>
+  <meta name="theme-color" content="#0f2b44">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <script src="./vendor/jspdf.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+    body {
+      background: #f0f3f7;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 1500px;
+      width: 100%;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      padding: 2rem 2rem 2.5rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a1e3c;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.2rem;
+      flex-wrap: wrap;
+    }
+    h1 span {
+      background: #e2eafc;
+      font-size: 0.9rem;
+      padding: 0.3rem 1.2rem;
+      border-radius: 2rem;
+      color: #1e3a5f;
+    }
+    .subtitle {
+      color: #475569;
+      margin-bottom: 1.8rem;
+      border-left: 4px solid #2563eb;
+      padding-left: 1rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      background: #f8fafd;
+      padding: 1.8rem;
+      border-radius: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #1e293b;
+    }
+    input, select {
+      padding: 0.7rem 0.9rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.8rem;
+      font-size: 0.95rem;
+      background: white;
+      transition: 0.2s;
+      font-weight: 500;
+      width: 100%;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+    }
+    .power-toggle {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .power-toggle input {
+      flex: 1;
+    }
+    .power-toggle select {
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .shift-section {
+      background: #eef2f6;
+      border-radius: 1.2rem;
+      padding: 1.2rem;
+      margin: 1.2rem 0;
+    }
+    .shift-options-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+    }
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      margin: 1.2rem 0;
+      flex-wrap: wrap;
+    }
+    button {
+      background: #1e3a5f;
+      color: white;
+      border: none;
+      padding: 0.9rem 2.2rem;
+      border-radius: 2.5rem;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    button:hover {
+      background: #0f2b44;
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: white;
+      color: #1e3a5f;
+      border: 2px solid #1e3a5f;
+      box-shadow: none;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 1.2rem;
+      padding: 1.3rem 1.2rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    }
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0b1e33;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+    table.param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    table.param-table th {
+      background: #f1f5f9;
+      text-align: left;
+      padding: 0.5rem;
+      font-weight: 700;
+    }
+    table.param-table td {
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid #e9eef3;
+    }
+    .val {
+      font-weight: 700;
+      color: #0c1b33;
+    }
+    .warn {
+      color: #b91c1c;
+      background: #fee2e2;
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.3rem;
+    }
+    #pdfReportContainer {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 210mm;
+      background: white;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #000;
+      padding: 0;
+      z-index: -9999;
+      pointer-events: none;
+    }
+    body.pdf-render-active .container {
+      visibility: hidden;
+    }
+    body.pdf-render-active #pdfReportContainer {
+      z-index: 999999;
+      pointer-events: none;
+    }
+    .pdf-action-panel {
+      margin: 0.5rem 0 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      border-radius: 1rem;
+      color: #0f2b44;
+      font-weight: 600;
+    }
+    .pdf-action-panel a {
+      color: #1d4ed8;
+      font-weight: 800;
+      margin-left: 0.6rem;
+      text-decoration: underline;
+    }
+
+    #pdfReportContainer .gear-report {
+      width: 210mm;
+      background: white;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 9.4pt;
+      line-height: 1.28;
+    }
+    #pdfReportContainer .pdf-page {
+      width: 210mm;
+      height: 297mm;
+      min-height: 297mm;
+      padding: 10mm 14mm 9mm;
+      border: 1px solid #222;
+      position: relative;
+      overflow: hidden;
+      background: white;
+      break-after: page;
+      page-break-after: always;
+      box-sizing: border-box;
+    }
+    #pdfReportContainer .pdf-page:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+    #pdfReportContainer .pdf-top {
+      height: 18mm;
+      border-bottom: 1px solid #222;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: -1mm -2mm 6mm;
+      padding: 0 2mm;
+      font-size: 9.5pt;
+    }
+    #pdfReportContainer .pdf-top span { color: #555; }
+    #pdfReportContainer .pdf-brand {
+      color: #0b74b8;
+      font-size: 17pt;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+    #pdfReportContainer .blue-title,
+    #pdfReportContainer .section-title {
+      background: #0b74b8;
+      color: #fff;
+      padding: 2px 5px;
+      font-size: 11pt;
+      margin: 4mm 0 2.8mm;
+    }
+    #pdfReportContainer .section-title { margin-top: 3.5mm; }
+    #pdfReportContainer .subhead {
+      font-weight: 700;
+      margin: 3mm 0 1.5mm;
+      color: #111;
+    }
+    #pdfReportContainer .section-block {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 3mm;
+    }
+    #pdfReportContainer .pdf-footer {
+      position: absolute;
+      left: 6mm;
+      bottom: 4mm;
+      font-size: 10pt;
+      color: #111;
+    }
+    #pdfReportContainer .cover-box {
+      margin-top: 35mm;
+    }
+    #pdfReportContainer .cover-box h1 {
+      display: block;
+      color: #111;
+      font-size: 22pt;
+      margin-bottom: 6mm;
+    }
+    #pdfReportContainer .cover-sub {
+      font-size: 18pt;
+      margin-bottom: 18mm;
+    }
+    #pdfReportContainer .cover-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11pt;
+    }
+    #pdfReportContainer .cover-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #ccc;
+    }
+    #pdfReportContainer .toc-row {
+      display: grid;
+      grid-template-columns: max-content 1fr 20px;
+      gap: 6px;
+      align-items: end;
+      margin: 3px 0;
+      font-size: 10.5pt;
+    }
+    #pdfReportContainer .toc-row span:nth-child(2) {
+      border-bottom: 1px solid #777;
+      transform: translateY(-3px);
+    }
+    #pdfReportContainer .gear-table,
+    #pdfReportContainer .appendix-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5mm 0 3mm;
+      table-layout: fixed;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    #pdfReportContainer .gear-table th,
+    #pdfReportContainer .gear-table td,
+    #pdfReportContainer .appendix-table th,
+    #pdfReportContainer .appendix-table td {
+      border-bottom: 1px solid #d0d0d0;
+      padding: 2.4px 4px;
+      vertical-align: top;
+      word-wrap: break-word;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    #pdfReportContainer .gear-table th,
+    #pdfReportContainer .appendix-table th {
+      background: #f1f1f1;
+      text-align: left;
+      font-weight: 700;
+    }
+    #pdfReportContainer thead { display: table-header-group; }
+    #pdfReportContainer tr { break-inside: avoid; page-break-inside: avoid; }
+    #pdfReportContainer .appendix-table { font-size: 8pt; }
+    #pdfReportContainer .appendix-table th:nth-child(1),
+    #pdfReportContainer .appendix-table td:nth-child(1) { width: 7%; }
+    #pdfReportContainer .appendix-table th:nth-child(2),
+    #pdfReportContainer .appendix-table td:nth-child(2) { width: 43%; }
+    #pdfReportContainer .appendix-table th:nth-child(3),
+    #pdfReportContainer .appendix-table td:nth-child(3) { width: 18%; }
+    #pdfReportContainer .appendix-table th:nth-child(4),
+    #pdfReportContainer .appendix-table td:nth-child(4) { width: 20%; }
+    #pdfReportContainer .appendix-table th:nth-child(5),
+    #pdfReportContainer .appendix-table td:nth-child(5) { width: 12%; }
+    #pdfReportContainer .msg-line {
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
+      padding: 8px 10px;
+      margin: 3mm 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #pdfReportContainer .info-mark {
+      width: 18px;
+      height: 18px;
+      border: 1px solid #0b74b8;
+      border-radius: 50%;
+      color: #0b74b8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 10pt;
+      flex-shrink: 0;
+    }
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #64748b;
+      text-align: center;
+    }
+
+    .pdf-viewer-card {
+      margin: 1rem 0 1.4rem;
+      background: #f8fafd;
+      border: 1px solid #cbd5e1;
+      border-radius: 1.25rem;
+      padding: 1rem;
+      box-shadow: 0 8px 24px rgba(15, 43, 68, 0.08);
+    }
+    .pdf-viewer-card h3 {
+      color: #0b1e33;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+    .pdf-preview-frame {
+      width: 100%;
+      height: 72vh;
+      border: 1px solid #94a3b8;
+      border-radius: 0.75rem;
+      background: #fff;
+    }
+    .pdf-link-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+    .pdf-link-row a,
+    .pdf-action-panel a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      background: #1e3a5f;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .pdf-action-panel a + a,
+    .pdf-link-row a + a {
+      background: #0f766e;
+    }
+    @media (max-width: 760px) {
+      body {
+        display: block;
+        padding: 0;
+        background: #ffffff;
+      }
+      .container {
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        padding: calc(1rem + env(safe-area-inset-top)) 0.85rem calc(1.25rem + env(safe-area-inset-bottom));
+      }
+      h1 {
+        font-size: 1.42rem;
+        line-height: 1.2;
+        gap: 0.45rem;
+      }
+      h1 span {
+        font-size: 0.72rem;
+        padding: 0.25rem 0.7rem;
+      }
+      .subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+      }
+      .input-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 0.85rem;
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+      }
+      input, select {
+        font-size: 1rem;
+        min-height: 44px;
+      }
+      .shift-section {
+        padding: 1rem;
+        border-radius: 1rem;
+      }
+      .shift-options-row,
+      #shiftExtraContainer {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 0.8rem !important;
+      }
+      .radio-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+      }
+      .button-row {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.95rem 1rem;
+      }
+      .results-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .card {
+        padding: 1rem;
+        border-radius: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table.param-table {
+        min-width: 560px;
+        font-size: 0.82rem;
+      }
+      .pdf-action-panel {
+        line-height: 1.5;
+      }
+      .pdf-action-panel a,
+      .pdf-link-row a {
+        width: 100%;
+      }
+      .pdf-preview-frame {
+        height: 70vh;
+      }
+    }
+    @media (display-mode: standalone) {
+      body { background: #fff; }
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>⚙️ Spur Gear Calculator <span>Professional Report</span></h1>
+  <div class="subtitle">Cylindrical gear pair calculation tool with printable engineering report.</div>
+
+  <!-- Basic Input Grid -->
+  <div class="input-grid">
+    <div class="input-group"><label>Pinion teeth z₁</label><input type="number" id="z1" value="17" min="5"></div>
+    <div class="input-group"><label>Gear teeth z₂</label><input type="number" id="z2" value="46" min="5"></div>
+    <div class="input-group"><label>Module m (mm)</label><input type="number" id="module" value="3.5" step="0.1" min="0.3"></div>
+    <div class="input-group"><label>Pressure angle α (°)</label><input type="number" id="pressureAngle" value="22.5" step="0.5" min="14"></div>
+    <div class="input-group"><label>Face width b (mm)</label><input type="number" id="faceWidth" value="26.0" step="0.5" min="5"></div>
+    <div class="input-group">
+      <label>Power</label>
+      <div class="power-toggle">
+        <input type="number" id="powerVal" value="61.147" step="0.001" min="0.1">
+        <select id="powerUnit">
+          <option value="kW" selected>kW</option>
+          <option value="HP">HP</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-group"><label>Pinion RPM</label><input type="number" id="rpm" value="2500" step="10" min="10"></div>
+  </div>
+
+  <!-- Quality, Material, Loading -->
+  <div class="input-grid">
+    <div class="input-group">
+      <label>Gear quality Qv</label>
+      <select id="quality">
+        <option value="1">Q1 - Lowest</option><option value="2">Q2</option><option value="3">Q3</option>
+        <option value="4">Q4</option><option value="5">Q5 - Coarse</option><option value="6" selected>Q6</option>
+        <option value="7">Q7</option><option value="8">Q8 - General</option><option value="9">Q9</option>
+        <option value="10">Q10 - High Precision</option><option value="11">Q11</option><option value="12">Q12 - Ultra‑Precision</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Material & Heat Treatment</label>
+      <select id="materialSelect">
+        <optgroup label="Steels">
+          <option value="1045_norm">1045 Normalized (σF=200,σH=600)</option>
+          <option value="1045_qt">1045 Q&T (250,700)</option>
+          <option value="4140_qt">4140 Q&T (300,800)</option>
+          <option value="4340_qt">4340 Q&T (320,850)</option>
+          <option value="8620_ch" selected>8620 Carb. Case-Hard. (380,1200)</option>
+          <option value="9310_ch">9310 Carb. Case-Hard. (420,1300)</option>
+          <option value="nitralloy">Nitralloy Nitrided (350,1100)</option>
+          <option value="ductile_iron">Ductile Iron (180,550)</option>
+          <option value="cast_iron">Gray Cast Iron (120,450)</option>
+        </optgroup>
+        <optgroup label="Aluminium">
+          <option value="al6061">6061-T6 (150,400)</option>
+          <option value="al7075">7075-T6 (180,500)</option>
+        </optgroup>
+        <optgroup label="Plastics">
+          <option value="nylon">Nylon 6/6 (60,80)</option>
+          <option value="acetal">Acetal/Delrin (65,90)</option>
+        </optgroup>
+        <optgroup label="Others">
+          <option value="brass">Brass (120,350)</option>
+          <option value="bronze">Bronze (130,400)</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Loading classification</label>
+      <select id="loadClass">
+        <option value="uniform">Uniform (smooth) Ko=1.0</option>
+        <option value="light">Light shock Ko=1.25</option>
+        <option value="moderate" selected>Moderate shock Ko=1.5</option>
+        <option value="heavy">Heavy shock Ko=1.75</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Load distribution Km</label>
+      <input type="number" id="Km" value="1.064" step="0.001" min="1.0">
+    </div>
+  </div>
+
+  <!-- Profile Shift Section -->
+  <div class="shift-section">
+    <div class="shift-options-row">
+      <div class="input-group">
+        <label>Profile shift type</label>
+        <select id="shiftType" onchange="updateShiftUI()">
+          <option value="none">Standard (x₁=x₂=0)</option>
+          <option value="fixed_cc">Fixed centre distance</option>
+          <option value="iso_opt">ISO optimized (max safety, αw≈25°)</option>
+          <option value="manual" selected>Manual x₁, x₂</option>
+          <option value="auto_sum">Auto sum (user sum, auto distrib.)</option>
+        </select>
+      </div>
+      <div id="shiftExtraContainer" style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center;"></div>
+    </div>
+  </div>
+
+  <div class="button-row">
+    <button onclick="calculateAll()">🔍 Compute All Parameters</button>
+    <button class="btn-outline" onclick="exportPDF()">📄 Generate PDF Preview</button>
+  </div>
+  <div id="pdfActionPanel" class="pdf-action-panel" style="display:none;"></div>
+  <div id="pdfViewerCard" class="pdf-viewer-card" style="display:none;">
+    <h3>PDF Preview</h3>
+    <iframe id="pdfPreviewFrame" class="pdf-preview-frame" title="Generated gear report PDF preview"></iframe>
+    <div class="pdf-link-row">
+      <a id="pdfOpenLink" href="#" target="_blank" rel="noopener">Open Full Screen</a>
+      <a id="pdfDownloadLink" href="#" download>Download PDF</a>
+    </div>
+  </div>
+
+  <div id="resultsContainer" class="results-grid"></div>
+  <div class="footer-note">⚡ Factors Ko, Kv, Ks, Km, KB · Inspection per quality class</div>
+</div>
+<div id="pdfReportContainer"></div>
+
+<script>
+  const materialDB = {
+    '1045_norm':{bend:200,contact:600},'1045_qt':{bend:250,contact:700},'4140_qt':{bend:300,contact:800},
+    '4340_qt':{bend:320,contact:850},'8620_ch':{bend:380,contact:1200},'9310_ch':{bend:420,contact:1300},
+    'nitralloy':{bend:350,contact:1100},'ductile_iron':{bend:180,contact:550},'cast_iron':{bend:120,contact:450},
+    'al6061':{bend:150,contact:400},'al7075':{bend:180,contact:500},'nylon':{bend:60,contact:80},
+    'acetal':{bend:65,contact:90},'brass':{bend:120,contact:350},'bronze':{bend:130,contact:400}
+  };
+  function calcJ(z,x){ let b=0.32+(z-20)*0.0012; b+=x*0.018; return Math.min(0.45,Math.max(0.25,b)); }
+  function inv(a){ return Math.tan(a)-a; }
+  function solveInv(target, guess=0.5){ let a=guess; for(let i=0;i<20;i++){ let f=Math.tan(a)-a-target; let df=Math.tan(a)**2; if(Math.abs(df)<1e-12) break; a-=f/df; if(Math.abs(f)<1e-12) break; } return a; }
+
+  function updateShiftUI(){
+    const type = document.getElementById('shiftType').value;
+    const container = document.getElementById('shiftExtraContainer');
+    let html='';
+    if(type==='fixed_cc'){
+      html=`<div class="radio-group">
+        <label><input type="radio" name="fixedMethod" value="iso_opt" checked> ISO optimized (balanced sliding)</label>
+        <label><input type="radio" name="fixedMethod" value="split" onchange="toggleFixedSplit()"> Manual split</label>
+      </div>
+      <div class="input-group"><label>Target centre distance a (mm)</label><input type="number" id="targetCenter" value="111.0" step="0.1"></div>
+      <div class="input-group" id="splitGroupFixed" style="display:none;"><label>Split to pinion %</label><input type="number" id="splitPercentFixed" value="60" min="0" max="100"></div>`;
+    }else if(type==='manual'){
+      html=`<div class="input-group"><label>x₁</label><input type="number" id="x1_manual" value="0.3271" step="0.0001"></div>
+      <div class="input-group"><label>x₂</label><input type="number" id="x2_manual" value="-0.1086" step="0.0001"></div>`;
+    }else if(type==='auto_sum'){
+      html=`<div class="input-group"><label>Sum x₁+x₂</label><input type="number" id="sumShift" value="0.2185" step="0.0001"></div>
+      <div class="input-group"><label>Split to pinion %</label><input type="number" id="splitPercentAuto" value="60" min="0" max="100"></div>`;
+    }else if(type==='iso_opt'){
+      html=`<span>⚡ Optimized for maximum tooth safety (αw≈25°)</span>`;
+    }
+    container.innerHTML = html;
+    if(type==='fixed_cc') toggleFixedSplit();
+  }
+  function toggleFixedSplit(){
+    const method = document.querySelector('input[name="fixedMethod"]:checked')?.value;
+    const splitDiv = document.getElementById('splitGroupFixed');
+    if(splitDiv) splitDiv.style.display = method==='split' ? 'flex' : 'none';
+  }
+
+  function calculateAll(){
+    const z1=parseInt(document.getElementById('z1').value)||21;
+    const z2=parseInt(document.getElementById('z2').value)||67;
+    const m=parseFloat(document.getElementById('module').value)||3.0;
+    const alphaDeg=parseFloat(document.getElementById('pressureAngle').value)||20.0;
+    const b=parseFloat(document.getElementById('faceWidth').value)||30.0;
+    let powerInput=parseFloat(document.getElementById('powerVal').value)||5.5;
+    const powerUnit=document.getElementById('powerUnit').value;
+    const P_kW = powerUnit === 'HP' ? powerInput * 0.7457 : powerInput;
+    const rpm1=parseFloat(document.getElementById('rpm').value)||1450;
+    const Qv=parseInt(document.getElementById('quality').value)||10;
+    const matKey=document.getElementById('materialSelect').value;
+    const loadClass=document.getElementById('loadClass').value;
+    const Km=parseFloat(document.getElementById('Km').value)||1.25;
+    const shiftType=document.getElementById('shiftType').value;
+
+    const alpha=alphaDeg*Math.PI/180;
+    const invAlpha=inv(alpha);
+    const a0=(z1+z2)*m/2;
+    let x1=0,x2=0;
+    const mat=materialDB[matKey]||{bend:380,contact:1200};
+    let Ko=1.0;
+    if(loadClass==='light') Ko=1.25; else if(loadClass==='moderate') Ko=1.5; else if(loadClass==='heavy') Ko=1.75;
+
+    if(shiftType==='manual'){
+      x1=parseFloat(document.getElementById('x1_manual')?.value)||0;
+      x2=parseFloat(document.getElementById('x2_manual')?.value)||0;
+    }else if(shiftType==='fixed_cc'){
+      const aTarget=parseFloat(document.getElementById('targetCenter')?.value)||a0;
+      if(aTarget <= 0){ alert('Target centre distance must be positive'); return; }
+      const cosAw = a0 * Math.cos(alpha) / aTarget;
+      if(Math.abs(cosAw) > 1){ alert('Impossible centre distance – cos(αw) out of range'); return; }
+      const aw = Math.acos(cosAw);
+      const sumX = (inv(aw)-invAlpha)*(z1+z2)/(2*Math.tan(alpha));
+      const method=document.querySelector('input[name="fixedMethod"]:checked')?.value||'iso_opt';
+      if(method==='iso_opt'){
+        // Robust search for balanced specific sliding, works for negative sumX
+        let lo = Math.max(-2.0, sumX - 2.0);
+        let hi = Math.min(2.0, sumX + 2.0);
+        if(lo >= hi){ lo = sumX-0.5; hi = sumX+0.5; }
+        for(let iter=0; iter<50; iter++){
+          let mid = (lo+hi)/2;
+          let x1t = mid, x2t = sumX - mid;
+          let invAwT = invAlpha + 2*sumX*Math.tan(alpha)/(z1+z2);
+          let awT = solveInv(invAwT, alpha + sumX*0.1);
+          let aT = a0*Math.cos(alpha)/Math.cos(awT);
+          let d1t=m*z1, d2t=m*z2, db1t=d1t*Math.cos(alpha), db2t=d2t*Math.cos(alpha);
+          let da1t = d1t + 2*m*(1+x1t), da2t = d2t + 2*m*(1+x2t);
+          // Tip shortening same logic
+          let hf1t=m*(1.25-x1t), hf2t=m*(1.25-x2t);
+          let df1t=d1t-2*hf1t, df2t=d2t-2*hf2t;
+          let c_req=0.25*m;
+          if(aT - (da1t/2 + df2t/2) < c_req){ let need=2*(aT - df2t/2 - c_req); da1t = need; }
+          if(aT - (da2t/2 + df1t/2) < c_req){ let need=2*(aT - df1t/2 - c_req); da2t = need; }
+          let g1t = Math.sqrt((da1t/2)**2 - (db1t/2)**2);
+          let g2t = Math.sqrt((da2t/2)**2 - (db2t/2)**2);
+          let slip1 = 1 - (z1/z2) * ((aT*Math.sin(awT)-g1t)/g1t);
+          let slip2 = 1 - (z2/z1) * ((aT*Math.sin(awT)-g2t)/g2t);
+          if(slip1 > slip2) hi = mid; else lo = mid;
+        }
+        x1 = (lo+hi)/2;
+        x2 = sumX - x1;
+      }else{
+        const splitPct = parseFloat(document.getElementById('splitPercentFixed')?.value) || 60;
+        x1 = sumX * splitPct / 100;
+        x2 = sumX - x1;
+      }
+    }else if(shiftType==='iso_opt'){
+      const awTarget=25*Math.PI/180;
+      const sumX=(inv(awTarget)-invAlpha)*(z1+z2)/(2*Math.tan(alpha));
+      x1=sumX*0.62; x2=sumX-x1;
+    }else if(shiftType==='auto_sum'){
+      const sumX=parseFloat(document.getElementById('sumShift')?.value)||0;
+      const splitPct=parseFloat(document.getElementById('splitPercentAuto')?.value)||60;
+      x1=sumX*splitPct/100; x2=sumX-x1;
+    }
+
+    const sumX=x1+x2;
+    const invAw=invAlpha+2*sumX*Math.tan(alpha)/(z1+z2);
+    const aw=solveInv(invAw, alpha+sumX*0.1);
+    const a=a0*Math.cos(alpha)/Math.cos(aw);
+    const d1=m*z1,d2=m*z2;
+    const db1=d1*Math.cos(alpha),db2=d2*Math.cos(alpha);
+    const dw1=d1*Math.cos(alpha)/Math.cos(aw), dw2=d2*Math.cos(alpha)/Math.cos(aw);
+    const hf1=m*(1.25-x1),hf2=m*(1.25-x2);
+    const df1=d1-2*hf1,df2=d2-2*hf2;
+    let ha1=m*(1+x1),ha2=m*(1+x2);
+    let da1=d1+2*ha1,da2=d2+2*ha2;
+    const c_req=0.25*m;
+    let tShort1=0,tShort2=0;
+    if(a-(da1/2+df2/2)<c_req){ let need=2*(a-df2/2-c_req); tShort1=(da1-need)/2; da1=need; }
+    if(a-(da2/2+df1/2)<c_req){ let need=2*(a-df1/2-c_req); tShort2=(da2-need)/2; da2=need; }
+    const s1=m*(Math.PI/2+2*x1*Math.tan(alpha)),s2=m*(Math.PI/2+2*x2*Math.tan(alpha));
+    const alpha_w1 = Math.acos(db1/dw1), alpha_w2 = Math.acos(db2/dw2);
+    const sw1 = dw1*((s1/d1)+inv(alpha)-inv(alpha_w1));
+    const sw2 = dw2*((s2/d2)+inv(alpha)-inv(alpha_w2));
+    const g1=Math.sqrt((da1/2)**2-(db1/2)**2),g2=Math.sqrt((da2/2)**2-(db2/2)**2);
+    const pathLen=g1+g2-a*Math.sin(aw);
+    const pbt=Math.PI*m*Math.cos(alpha);
+    const epsAlpha=pathLen/pbt;
+    const u=z2/z1;
+    const slip1=1-(1/u)*((a*Math.sin(aw)-g1)/g1),slip2=1-u*((a*Math.sin(aw)-g2)/g2);
+    const xMin1=(17-z1)/17,xMin2=(17-z2)/17;
+    const under1=x1<xMin1,under2=x2<xMin2;
+
+    const rFillet1=0.38*m, rFillet2=0.38*m;
+    const wholeDepth1=ha1+hf1, wholeDepth2=ha2+hf2;
+    const alpha_a1=Math.acos(db1/da1), alpha_a2=Math.acos(db2/da2);
+    const sa1=da1*((s1/d1)+inv(alpha)-inv(alpha_a1));
+    const sa2=da2*((s2/d2)+inv(alpha)-inv(alpha_a2));
+    const approachLen=Math.sqrt((da2/2)**2-(db2/2)**2)-a*Math.sin(aw);
+    const recessLen=pathLen-approachLen;
+
+    const rpm2=rpm1*z1/z2;
+    const omega=2*Math.PI*rpm1/60;
+    const T1=P_kW*1000/omega;
+    const T2=T1*z2/z1;
+    const v=omega*d1/2000;
+    const Ft=2000*T1/d1;
+    const Fr=Ft*Math.tan(alpha);
+    const Fn=Ft/Math.cos(alpha);
+
+    const B=0.25*(Qv-5.0)**0.667;
+    const A_val=50+56*(1-B);
+    const Kv=((A_val+Math.sqrt(200*v))/A_val)**B;
+    const Ks=m<=5?1.0:Math.pow(m/5,0.0535);
+    const KB=1.0;
+    const J1=calcJ(z1,x1),J2=calcJ(z2,x2);
+    const sigmaF1=(Ft/(b*m))*(Ko*Kv*Ks*Km*KB)/J1;
+    const sigmaF2=(Ft/(b*m))*(Ko*Kv*Ks*Km*KB)/J2;
+    const allowBend=mat.bend, allowContact=mat.contact;
+    const Ze=190,Zh=2.5,Zeps=0.95;
+    const sigmaH=Ze*Zh*Zeps*Math.sqrt((Ft/(b*d1))*((d1+d2)/d2)*Ko*Kv*Km);
+    const SF1=allowBend/sigmaF1, SF2=allowBend/sigmaF2;
+    const SH=allowContact/sigmaH;
+    const minFOS=Math.min(SF1,SF2,SH);
+
+    const tolDia1=(0.01*m*Math.sqrt(d1/10)+0.005*d1)*(12/Qv);
+    const tolDia2=(0.01*m*Math.sqrt(d2/10)+0.005*d2)*(12/Qv);
+    const runout1=0.02*m*(10/Qv);
+    const runout2=0.02*m*(10/Qv);
+    const fpt1=0.012*m*(10/Qv);
+    const fpt2=0.012*m*(10/Qv);
+    const Fi1=0.025*m+0.01*(d1/100);
+    const Fi2=0.025*m+0.01*(d2/100);
+    const k1 = Math.max(1, Math.round(z1/9 + 0.5));
+    const k2 = Math.max(1, Math.round(z2/9 + 0.5));
+    const W1 = m*Math.cos(alpha)*(Math.PI*(k1-0.5)+z1*Math.tan(alpha)+2*x1*Math.tan(alpha));
+    const W2 = m*Math.cos(alpha)*(Math.PI*(k2-0.5)+z2*Math.tan(alpha)+2*x2*Math.tan(alpha));
+    const Wtol1 = fpt1 * k1 * 1.2;
+    const Wtol2 = fpt2 * k2 * 1.2;
+    const backlash=0.05*m+0.03;
+    const pinDia=1.68*m;
+    const overPins1=d1+2*m*1.05;
+    const overPins2=d2+2*m*1.05;
+
+    window._gearData={
+      z1,z2,m,alphaDeg,b,P_kW,rpm1,Qv,matKey,loadClass,Km,Ko,Kv,Ks,KB,
+      x1,x2,sumX,aw,a0,a,da1,da2,df1,df2,d1,d2,db1,db2,dw1,dw2,
+      ha1,ha2,hf1,hf2,s1,s2,sw1,sw2,sa1,sa2,wholeDepth1,wholeDepth2,
+      rFillet1,rFillet2,tShort1,tShort2,epsAlpha,approachLen,recessLen,
+      slip1,slip2,under1,under2,
+      rpm2,v,T1,T2,Ft,Fr,Fn,J1,J2,sigmaF1,sigmaF2,sigmaH,SF1,SF2,SH,minFOS,
+      allowBend,allowContact,
+      tolDia1,tolDia2,runout1,runout2,fpt1,fpt2,Fi1,Fi2,
+      k1,k2,W1,W2,Wtol1,Wtol2,backlash,pinDia,overPins1,overPins2
+    };
+    renderResults();
+  }
+
+  function renderResults(){
+    const d=window._gearData; if(!d) return;
+    const fmt=(v,dec=3)=>Math.abs(v)<1e-9?'0':v.toFixed(dec);
+    const w1=d.under1?'<span class="warn">⚠ Undercut</span>':'';
+    const w2=d.under2?'<span class="warn">⚠ Undercut</span>':'';
+
+    const html=`
+    <div class="card"><h3>📐 Geometry</h3><table class="param-table">
+      <tr><th>Parameter</th><th>Pinion</th><th>Gear</th></tr>
+      <tr><td>Teeth</td><td class="val">${d.z1}</td><td class="val">${d.z2}</td></tr>
+      <tr><td>Profile shift x</td><td class="val">${fmt(d.x1,4)}</td><td class="val">${fmt(d.x2,4)}</td></tr>
+      <tr><td>Pitch diameter d</td><td class="val">${fmt(d.d1)}</td><td class="val">${fmt(d.d2)}</td></tr>
+      <tr><td>Base diameter db</td><td class="val">${fmt(d.db1)}</td><td class="val">${fmt(d.db2)}</td></tr>
+      <tr><td>Operating pitch dia. dw</td><td class="val">${fmt(d.dw1)}</td><td class="val">${fmt(d.dw2)}</td></tr>
+      <tr><td>Tip diameter da</td><td class="val">${fmt(d.da1)} ${w1}</td><td class="val">${fmt(d.da2)} ${w2}</td></tr>
+      <tr><td>Root diameter df</td><td class="val">${fmt(d.df1)}</td><td class="val">${fmt(d.df2)}</td></tr>
+      <tr><td>Addendum ha</td><td class="val">${fmt(d.ha1-d.tShort1)}</td><td class="val">${fmt(d.ha2-d.tShort2)}</td></tr>
+      <tr><td>Dedendum hf</td><td class="val">${fmt(d.hf1)}</td><td class="val">${fmt(d.hf2)}</td></tr>
+      <tr><td>Whole depth</td><td class="val">${fmt(d.wholeDepth1)}</td><td class="val">${fmt(d.wholeDepth2)}</td></tr>
+      <tr><td>Root fillet radius</td><td class="val">${fmt(d.rFillet1)}</td><td class="val">${fmt(d.rFillet2)}</td></tr>
+      <tr><td>Tooth thickness s (ref.)</td><td class="val">${fmt(d.s1,3)}</td><td class="val">${fmt(d.s2,3)}</td></tr>
+      <tr><td>Tooth thickness sw (oper.)</td><td class="val">${fmt(d.sw1,3)}</td><td class="val">${fmt(d.sw2,3)}</td></tr>
+      <tr><td>Tip tooth thickness sa</td><td class="val">${fmt(d.sa1,3)}</td><td class="val">${fmt(d.sa2,3)}</td></tr>
+      <tr><td>Tip shortening</td><td class="val">${fmt(d.tShort1,4)}</td><td class="val">${fmt(d.tShort2,4)}</td></tr>
+      <tr><td colspan="3"><strong>Centre distance:</strong> a₀=${fmt(d.a0)} mm | a=${fmt(d.a)} mm</td></tr>
+      <tr><td colspan="3"><strong>Working pressure angle:</strong> αw=${fmt(d.aw*180/Math.PI,4)}°</td></tr>
+      <tr><td colspan="3"><strong>Contact ratio εα:</strong> ${fmt(d.epsAlpha,3)}</td></tr>
+      <tr><td colspan="3"><strong>Approach / Recess:</strong> ${fmt(d.approachLen,3)} / ${fmt(d.recessLen,3)} mm</td></tr>
+      <tr><td colspan="3"><strong>Specific sliding:</strong> pinion tip ${fmt(d.slip1,4)} | gear tip ${fmt(d.slip2,4)}</td></tr>
+    </table></div>
+
+    <div class="card"><h3>⚡ Loads & Speeds</h3><table class="param-table">
+      <tr><th>Parameter</th><th>Value</th></tr>
+      <tr><td>Gear ratio</td><td class="val">${fmt(d.z2/d.z1,3)}</td></tr>
+      <tr><td>Pinion RPM / Gear RPM</td><td class="val">${d.rpm1} / ${fmt(d.rpm2,1)}</td></tr>
+      <tr><td>Pitch line velocity</td><td class="val">${fmt(d.v,2)} m/s</td></tr>
+      <tr><td>Torque pinion / gear</td><td class="val">${fmt(d.T1,2)} / ${fmt(d.T2,2)} N·m</td></tr>
+      <tr><td>Tangential force Ft</td><td class="val">${fmt(d.Ft,1)} N</td></tr>
+      <tr><td>Radial force Fr</td><td class="val">${fmt(d.Fr,1)} N</td></tr>
+      <tr><td>Normal force Fn</td><td class="val">${fmt(d.Fn,1)} N</td></tr>
+    </table></div>
+
+    <div class="card"><h3>🛡️ Strength</h3><table class="param-table">
+      <tr><th>Factor</th><th>Pinion</th><th>Gear</th></tr>
+      <tr><td>Overload Ko</td><td class="val" colspan="2">${fmt(d.Ko,2)}</td></tr>
+      <tr><td>Dynamic Kv</td><td class="val" colspan="2">${fmt(d.Kv,4)}</td></tr>
+      <tr><td>Size Ks</td><td class="val" colspan="2">${fmt(d.Ks,3)}</td></tr>
+      <tr><td>Load dist. Km</td><td class="val" colspan="2">${fmt(d.Km,2)}</td></tr>
+      <tr><td>Rim thickness KB</td><td class="val" colspan="2">1.0</td></tr>
+      <tr><td>Geometry J</td><td class="val">${fmt(d.J1,4)}</td><td class="val">${fmt(d.J2,4)}</td></tr>
+      <tr><td>Bending stress σF</td><td class="val">${fmt(d.sigmaF1,1)} MPa</td><td class="val">${fmt(d.sigmaF2,1)} MPa</td></tr>
+      <tr><td>Allowable bending</td><td class="val" colspan="2">${d.allowBend} MPa</td></tr>
+      <tr><td>Bending safety SF</td><td class="val">${fmt(d.SF1,2)}</td><td class="val">${fmt(d.SF2,2)}</td></tr>
+      <tr><td>Contact stress σH</td><td class="val" colspan="2">${fmt(d.sigmaH,1)} MPa</td></tr>
+      <tr><td>Allowable contact</td><td class="val" colspan="2">${d.allowContact} MPa</td></tr>
+      <tr><td>Contact safety SH</td><td class="val" colspan="2">${fmt(d.SH,2)}</td></tr>
+      <tr style="background:#e6f0ff;"><td><strong>Min. safety factor</strong></td><td class="val" colspan="2"><strong>${fmt(d.minFOS,2)}</strong></td></tr>
+    </table></div>
+
+    <div class="card"><h3>📏 Tolerances & Inspection (Q${d.Qv})</h3>
+    <table class="param-table">
+      <tr><th>Parameter</th><th>Pinion</th><th>Gear</th></tr>
+      <tr><td>Diameter tolerance</td><td class="val">±${fmt(d.tolDia1,4)} mm</td><td class="val">±${fmt(d.tolDia2,4)} mm</td></tr>
+      <tr><td>Runout Fr</td><td class="val">${fmt(d.runout1,4)} mm</td><td class="val">${fmt(d.runout2,4)} mm</td></tr>
+      <tr><td>Pitch tolerance fpt</td><td class="val">${fmt(d.fpt1,4)} mm</td><td class="val">${fmt(d.fpt2,4)} mm</td></tr>
+      <tr><td>Total composite Fi'</td><td class="val">${fmt(d.Fi1,4)} mm</td><td class="val">${fmt(d.Fi2,4)} mm</td></tr>
+      <tr><td>Span measurement (k)</td><td class="val">${fmt(d.W1,3)} mm (k=${d.k1})</td><td class="val">${fmt(d.W2,3)} mm (k=${d.k2})</td></tr>
+      <tr><td>Span tolerance</td><td class="val">±${fmt(d.Wtol1,4)} mm</td><td class="val">±${fmt(d.Wtol2,4)} mm</td></tr>
+      <tr><td>Over pins (pin ∅${fmt(d.pinDia,3)})</td><td class="val">~${fmt(d.overPins1,2)} mm</td><td class="val">~${fmt(d.overPins2,2)} mm</td></tr>
+      <tr><td>Backlash (min)</td><td class="val" colspan="2">${fmt(d.backlash,3)} mm</td></tr>
+    </table></div>`;
+    document.getElementById('resultsContainer').innerHTML = html;
+  }
+
+  function getNextSpurGearReportId(){
+    const key = 'spurGearReportCounter';
+    let next = 1;
+    try {
+      next = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
+      localStorage.setItem(key, String(next));
+    } catch (err) {
+      window._spurGearReportCounter = (window._spurGearReportCounter || 0) + 1;
+      next = window._spurGearReportCounter;
+    }
+    return `SG${String(next).padStart(4, '0')}`;
+  }
+
+  async function exportPDF(){
+    if(!window._gearData){ alert('Please compute first.'); return; }
+
+    const d=window._gearData;
+    const fmt=(v,dec=3)=>Number.isFinite(Number(v)) ? (Math.abs(Number(v))<1e-9 ? '0' : Number(v).toFixed(dec)) : '-';
+    const fmt2=v=>fmt(v,2);
+    const fmt3=v=>fmt(v,3);
+    const fmt4=v=>fmt(v,4);
+    const clean=(value)=>String(value ?? '-').replace(/[\u03b1\u03b2\u03b3\u03b5\u03c3\u03c1\u03a3\u00b5\u00b2\u00b3\u00b1\u00d8\u2013\u2014\u00b7]/g, ch => ({
+      '\u03b1':'alpha','\u03b2':'beta','\u03b3':'gamma','\u03b5':'epsilon','\u03c3':'sigma','\u03c1':'rho','\u03a3':'Sigma','\u00b5':'u','\u00b2':'2','\u00b3':'3','\u00b1':'+/-','\u00d8':'dia','\u2013':'-','\u2014':'-','\u00b7':'*'
+    }[ch] || ch));
+
+    const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+    if(!jsPDFCtor){
+      alert('PDF engine did not load. Please restart the app and try again.');
+      return;
+    }
+
+    const pairTitle=`${d.z1}-${d.z2}`;
+    const rid=getNextSpurGearReportId();
+    const filename=`Gear_Report_${pairTitle}_${rid}.pdf`;
+    const today=new Date().toLocaleString();
+    const serviceLife=20000;
+    const loadCycles1=d.rpm1*60*serviceLife/1e6;
+    const loadCycles2=d.rpm2*60*serviceLife/1e6;
+    const dpNormal=25.4/d.m;
+    const ratio=d.z2/d.z1;
+    const matLabel=(document.getElementById('materialSelect')?.selectedOptions?.[0]?.textContent || d.matKey).trim();
+    const loadLabel=(document.getElementById('loadClass')?.selectedOptions?.[0]?.textContent || d.loadClass).trim();
+
+    const actionPanel=document.getElementById('pdfActionPanel');
+    if(actionPanel){
+      actionPanel.style.display='block';
+      actionPanel.innerHTML='Generating PDF preview...';
+    }
+
+    const viewerCard=document.getElementById('pdfViewerCard');
+    const previewFrame=document.getElementById('pdfPreviewFrame');
+    const openLink=document.getElementById('pdfOpenLink');
+    const downloadLink=document.getElementById('pdfDownloadLink');
+
+    try{
+      const doc=new jsPDFCtor({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+      const totalPagesExp='{total_pages_count_string}';
+      const W=210, H=297;
+      const frame={x:4,y:8,w:202,h:276};
+      const content={x:8,y:24,w:194,bottom:278};
+      const blue=[11,116,184];
+      const grey=[238,238,238];
+      const lineGrey=[190,190,190];
+      let y=24;
+      let currentTitle='';
+
+      function setText(color=[17,17,17], size=8.7, style='normal'){
+        doc.setTextColor(color[0],color[1],color[2]);
+        doc.setFont('helvetica',style);
+        doc.setFontSize(size);
+      }
+
+      function drawFooter(){
+        setText([20,20,20],8.5,'normal');
+        const page=doc.internal.getNumberOfPages();
+        doc.text(`${page}/${totalPagesExp}`,5,291);
+      }
+
+      function drawFrame(title=''){
+        currentTitle=title;
+        doc.setLineWidth(0.25);
+        doc.setDrawColor(35,35,35);
+        doc.rect(frame.x,frame.y,frame.w,frame.h);
+        doc.line(frame.x,20,frame.x+frame.w,20);
+        setText(blue,16,'bold');
+        doc.text('Gear Report',198,15,{align:'right'});
+        if(title){
+          doc.setFillColor(blue[0],blue[1],blue[2]);
+          doc.rect(content.x,24,content.w,5.5,'F');
+          setText([255,255,255],10,'bold');
+          doc.text(clean(title),content.x+1.8,28.1);
+          y=34;
+        }else{
+          y=27;
+        }
+        drawFooter();
+      }
+
+      function newPage(title=''){
+        doc.addPage();
+        drawFrame(title);
+      }
+
+      function ensureSpace(mmNeeded, continueTitle){
+        if(y+mmNeeded>content.bottom){
+          newPage(continueTitle || currentTitle || 'Report continued');
+        }
+      }
+
+      function section(no,title){
+        ensureSpace(10,`${no} ${title} continued`);
+        doc.setFillColor(blue[0],blue[1],blue[2]);
+        doc.rect(content.x,y,content.w,5.4,'F');
+        setText([255,255,255],9.6,'bold');
+        doc.text(clean(`${no} ${title}`),content.x+1.6,y+3.9);
+        y+=8.2;
+      }
+
+      function subhead(title){
+        ensureSpace(7,`${currentTitle} continued`);
+        setText([17,17,17],8.8,'bold');
+        doc.text(clean(title),content.x,y);
+        y+=4.5;
+      }
+
+      function note(text){
+        const lines=doc.splitTextToSize(clean(text),content.w-14);
+        const h=Math.max(7,lines.length*4+3);
+        ensureSpace(h+2,'Messages continued');
+        doc.setDrawColor(50,50,50);
+        doc.line(content.x,y,content.x+content.w,y);
+        doc.line(content.x,y+h,content.x+content.w,y+h);
+        doc.setDrawColor(blue[0],blue[1],blue[2]);
+        doc.circle(content.x+4,y+3.6,2.2);
+        setText(blue,6.5,'bold');
+        doc.text('i',content.x+4,y+4.5,{align:'center'});
+        setText([17,17,17],8.5,'normal');
+        doc.text(lines,content.x+10,y+4.6);
+        y+=h+3;
+      }
+
+      function row(label,symbol,g1,g2,unit){
+        return {label:clean(label),symbol:clean(symbol||''),g1:clean(g1 ?? ''),g2:clean(g2 ?? ''),unit:clean(unit||'')};
+      }
+      function pair(label,symbol,value,unit){
+        return row(label,symbol,value,'',unit);
+      }
+
+      function drawTable(rows, opts={}){
+        const titleForBreak=opts.continueTitle || currentTitle || 'Report continued';
+        const colW=opts.colW || [76,30,32,38,18];
+        const x0=content.x;
+        const tableW=colW.reduce((a,b)=>a+b,0);
+        const hHead=5.6;
+        const pad=1.4;
+        const lineH=3.25;
+        const fontSize=8.2;
+        const headerLabels=['Parameter','Symbol','Gear 1','Gear 2 / Pair','Unit'];
+
+        function drawHeader(){
+          ensureSpace(hHead+6,titleForBreak);
+          doc.setFillColor(grey[0],grey[1],grey[2]);
+          doc.rect(x0,y,tableW,hHead,'F');
+          setText([17,17,17],8.4,'bold');
+          let x=x0;
+          for(let i=0;i<headerLabels.length;i++){
+            doc.text(headerLabels[i],x+pad,y+3.9);
+            x+=colW[i];
+          }
+          doc.setDrawColor(lineGrey[0],lineGrey[1],lineGrey[2]);
+          doc.line(x0,y+hHead,x0+tableW,y+hHead);
+          y+=hHead;
+        }
+
+        drawHeader();
+        rows.forEach(r=>{
+          const cells=[r.label,r.symbol,r.g1,r.g2,r.unit].map((v,i)=>doc.splitTextToSize(clean(v),colW[i]-pad*2));
+          const maxLines=Math.max(...cells.map(c=>c.length));
+          const rh=Math.max(5.4,maxLines*lineH+2.2);
+          if(y+rh>content.bottom){
+            newPage(titleForBreak);
+            drawHeader();
+          }
+          setText([25,25,25],fontSize,'normal');
+          let x=x0;
+          for(let i=0;i<cells.length;i++){
+            doc.text(cells[i],x+pad,y+3.8);
+            x+=colW[i];
+          }
+          doc.setDrawColor(lineGrey[0],lineGrey[1],lineGrey[2]);
+          doc.line(x0,y+rh,x0+tableW,y+rh);
+          y+=rh;
+        });
+        y+=3.8;
+      }
+
+      function contentsRow(no,title,page){
+        ensureSpace(6,'Contents continued');
+        setText([20,20,20],9,'normal');
+        const left=clean(`${no}   ${title}`);
+        doc.text(left,content.x,y);
+        doc.text(String(page),content.x+content.w-6,y,{align:'right'});
+        const leftW=doc.getTextWidth(left)+2;
+        const pageW=doc.getTextWidth(String(page))+2;
+        doc.setDrawColor(120,120,120);
+        doc.line(content.x+leftW,y-1.2,content.x+content.w-6-pageW,y-1.2);
+        y+=5.4;
+      }
+
+      // Page 1 - title page, aligned to the provided report style but without the removed brand name.
+      drawFrame('');
+      setText([17,17,17],12,'bold');
+      doc.text('Cylindrical gear pair, spur',content.x,31);
+      setText([17,17,17],10.5,'bold');
+      doc.text(pairTitle,content.x,39);
+      setText([17,17,17],8.5,'normal');
+      doc.text(`Report ID: ${rid}`,content.x,49);
+      doc.text(`Generated on: ${today}`,content.x,55);
+      doc.text('Calculation method: Gear geometry and strength calculation',content.x,61);
+      doc.text('Professional Spur Gear Calculator',content.x,67);
+      setText([17,17,17],8.5,'normal');
+      doc.text('Calculation is consistent.',content.x,88);
+
+      // Page 2 - contents.
+      newPage('Contents');
+      contentsRow('1','Messages',3);
+      contentsRow('2','Overview',3);
+      contentsRow('3','Tooth geometry',3);
+      contentsRow('4','Materials',4);
+      contentsRow('4.1','Gear roughness',4);
+      contentsRow('4.2','Lubrication',4);
+      contentsRow('5','Geometry',5);
+      contentsRow('5.1','Reference profiles',5);
+      contentsRow('5.2','Basic data',6);
+      contentsRow('5.3','Diameters and their allowances',6);
+      contentsRow('5.4','Tip clearances and tooth heights',7);
+      contentsRow('5.5','Tooth thickness and pitch',7);
+      contentsRow('5.6','Sliding',7);
+      contentsRow('5.7','Contact ratios',7);
+      contentsRow('6','General influence factors',8);
+      contentsRow('6.1','Forces and circumferential speed',8);
+      contentsRow('6.2','Calculation of K factors',8);
+      contentsRow('7','Calculation of tooth root strength',9);
+      contentsRow('7.1','Safety factors',9);
+      contentsRow('8','Calculation of flank strength',10);
+      contentsRow('8.1','Safety factors',10);
+      contentsRow('9','Measurements for tooth thickness',11);
+      contentsRow('10','Toothing tolerances',11);
+
+      // Page 3 - messages, overview and tooth geometry.
+      newPage('');
+      section('1','Messages');
+      const warnings=[];
+      if(d.under1) warnings.push('Pinion profile shift is below the usual undercut recommendation.');
+      if(d.under2) warnings.push('Gear profile shift is below the usual undercut recommendation.');
+      if(d.epsAlpha<1.2) warnings.push('Transverse contact ratio is low. Review the geometry before manufacturing.');
+      if(d.minFOS<1.0) warnings.push('Minimum calculated safety factor is below 1.0.');
+      if(warnings.length){ warnings.forEach(note); } else { note('Calculation is consistent.'); }
+
+      section('2','Overview');
+      drawTable([
+        pair('Calculation method','', 'Gear geometry and strength calculation',''),
+        pair('Drawing or article number','', pairTitle,''),
+        row('Power','P','',fmt3(d.P_kW),'kW'),
+        row('Speed','n',fmt(d.rpm1,1),fmt(d.rpm2,1),'1/min'),
+        row('Number of load cycles','NL',fmt3(loadCycles1),fmt3(loadCycles2),'million'),
+        row('Torque','T',fmt(d.T1,1),fmt(d.T2,1),'N m'),
+        pair('Application factor','KA / Ko',fmt2(d.Ko),''),
+        pair('Required service life','H',fmt2(serviceLife),'h'),
+        row('Gear driving (+) / driven (-)','', '+','-',''),
+        pair('Load classification','',loadLabel,''),
+        pair('Report ID','',rid,'')
+      ],{continueTitle:'Overview continued'});
+
+      section('3','Tooth geometry');
+      drawTable([
+        pair('Center distance','a',fmt3(d.a),'mm'),
+        pair('Reference center distance','a0',fmt3(d.a0),'mm'),
+        pair('Normal module','mn',fmt4(d.m),'mm'),
+        pair('Transverse module','mt',fmt4(d.m),'mm'),
+        pair('Normal diametral pitch','Pnd',fmt(dpNormal,5),'1/in'),
+        pair('Transverse diametral pitch','Ptd',fmt(dpNormal,5),'1/in'),
+        pair('Normal pressure angle','alpha_n',fmt4(d.alphaDeg),'deg'),
+        pair('Transverse pressure angle','alpha_t',fmt4(d.alphaDeg),'deg'),
+        pair('Helix angle at reference circle','beta','0.0000','deg'),
+        row('Number of teeth','z',d.z1,d.z2,''),
+        row('Facewidth','b',fmt2(26.5),fmt2(d.b),'mm'),
+        pair('Hand of gear','','Spur gear',''),
+        row('Accuracy grade','Q',`Q${d.Qv}`,`Q${d.Qv}`,'')
+      ],{continueTitle:'Tooth geometry continued'});
+
+      // Page 4 - material data.
+      newPage('');
+      section('4','Materials');
+      drawTable([
+        row('Material and heat treatment','',matLabel,matLabel,''),
+        row('Infinite life strength for tooth root stress','sigmaFlim',fmt2(d.allowBend),fmt2(d.allowBend),'N/mm2'),
+        row('Infinite life strength for Hertzian pressure','sigmaHlim',fmt2(d.allowContact),fmt2(d.allowContact),'N/mm2'),
+        row('Young modulus','E','206000','206000','N/mm2'),
+        row('Poisson ratio','nu','0.300','0.300',''),
+        row('Tensile strength','sigmaB','1100.00','1100.00','N/mm2'),
+        row('Yield point','sigmaS','775.00','775.00','N/mm2'),
+        row('Surface hardness','', '59', '59','HRC')
+      ],{continueTitle:'Materials continued'});
+
+      subhead('4.1 Gear roughness');
+      drawTable([
+        row('Arithmetic mean roughness value Ra, flank','RAH','0.60','0.60','um'),
+        row('Arithmetic mean roughness value Ra, root','RAF','3.00','3.00','um'),
+        row('Mean peak-to-valley roughness Rz, flank','RZH','4.80','4.80','um'),
+        row('Mean peak-to-valley roughness Rz, root','RZF','20.00','20.00','um')
+      ],{continueTitle:'Gear roughness continued'});
+
+      subhead('4.2 Lubrication');
+      drawTable([
+        pair('Lubrication type','', 'Oil bath lubrication',''),
+        pair('Type of oil','', 'ISO-VG 220',''),
+        pair('Lubricant base','', 'Mineral-oil base',''),
+        pair('Oil nominal kinematic viscosity at 40 C','nu40','220.00','mm2/s'),
+        pair('Oil nominal kinematic viscosity at 100 C','nu100','17.50','mm2/s'),
+        pair('Specific density at 15 C','rho','0.895','kg/dm3'),
+        pair('Oil temperature','TS','70.000','deg C')
+      ],{continueTitle:'Lubrication continued'});
+
+      // Page 5 - geometry reference profiles.
+      newPage('');
+      section('5','Geometry');
+      subhead('5.1 Reference profiles');
+      drawTable([
+        row('Dedendum reference profile','hfP*','1.250','1.250',''),
+        row('Tooth root radius reference profile','rho_fP*','0.300','0.300',''),
+        row('Addendum reference profile','haP*','1.000','1.000',''),
+        row('Tip radius factor','rho_aP*','0.000','0.000',''),
+        row('Protuberance height coefficient','hprP*','0.000','0.000',''),
+        row('Protuberance angle','alpha_prP','0.000','0.000','deg'),
+        row('Tip form height coefficient','hFaP*','0.000','0.000',''),
+        row('Ramp angle','alpha_KP','0.000','0.000','deg'),
+        row('Type of profile modification','', 'none', 'none',''),
+        row('Tip relief by running in','Ca L/R','2.0 / 2.0','2.0 / 2.0','um')
+      ],{continueTitle:'Reference profiles continued'});
+
+      // Page 6 - basic geometry and diameters.
+      newPage('');
+      section('5','Geometry continued');
+      subhead('5.2 Basic data');
+      drawTable([
+        pair('Overall transmission ratio','itot',fmt(-ratio,3),''),
+        pair('Gear ratio','u',fmt(ratio,3),''),
+        pair('Transverse module','mt',fmt3(d.m),'mm'),
+        pair('Transverse pressure angle','alpha_t',fmt3(d.alphaDeg),'deg'),
+        pair('Working pressure angle','alpha_wt',fmt(d.aw*180/Math.PI,3),'deg'),
+        pair('Working pressure angle at normal section','alpha_wn',fmt(d.aw*180/Math.PI,3),'deg'),
+        pair('Base helix angle','beta_b','0.000','deg'),
+        pair('Helix angle at operating pitch circle','beta_w','0.000','deg'),
+        pair('Reference center distance','ad',fmt3(d.a0),'mm'),
+        pair('Sum of profile shift coefficients','Sigma xi',fmt4(d.sumX),''),
+        row('Profile shift coefficient','x',fmt4(d.x1),fmt4(d.x2),''),
+        row('Virtual gear number of teeth','zn',fmt3(d.z1),fmt3(d.z2),'')
+      ],{continueTitle:'Basic data continued'});
+
+      subhead('5.3 Diameters and their allowances');
+      drawTable([
+        row('Reference diameter','d',fmt3(d.d1),fmt3(d.d2),'mm'),
+        row('Base diameter','db',fmt3(d.db1),fmt3(d.db2),'mm'),
+        row('Tip diameter','da',fmt3(d.da1),fmt3(d.da2),'mm'),
+        row('Tip diameter allowances','Ada e/i','0.000 / -0.030','0.000 / -0.040','mm'),
+        row('Operating pitch diameter','dw',fmt3(d.dw1),fmt3(d.dw2),'mm'),
+        row('Root diameter','df',fmt3(d.df1),fmt3(d.df2),'mm'),
+        row('Base circle diameter','db',fmt3(d.db1),fmt3(d.db2),'mm')
+      ],{continueTitle:'Diameters continued'});
+
+      // Page 7 - heights, thickness, sliding, contact ratios.
+      newPage('');
+      section('5','Geometry continued');
+      subhead('5.4 Tip clearances and tooth heights');
+      drawTable([
+        pair('Theoretical tip clearance','c',fmt3(0.25*d.m),'mm'),
+        row('Addendum','ha',fmt3(d.ha1-d.tShort1),fmt3(d.ha2-d.tShort2),'mm'),
+        row('Dedendum','hf',fmt3(d.hf1),fmt3(d.hf2),'mm'),
+        row('Tooth height','h',fmt3(d.wholeDepth1),fmt3(d.wholeDepth2),'mm'),
+        row('Root fillet radius','rho_f',fmt3(d.rFillet1),fmt3(d.rFillet2),'mm'),
+        row('Tip shortening','',fmt4(d.tShort1),fmt4(d.tShort2),'mm')
+      ],{continueTitle:'Tip clearances continued'});
+
+      subhead('5.5 Tooth thickness and pitch');
+      drawTable([
+        row('Tooth thickness on reference circle','s',fmt3(d.s1),fmt3(d.s2),'mm'),
+        row('Tooth thickness on operating pitch circle','sw',fmt3(d.sw1),fmt3(d.sw2),'mm'),
+        row('Tooth thickness at tip circle','sa',fmt3(d.sa1),fmt3(d.sa2),'mm'),
+        pair('Pitch on reference circle','pt',fmt3(Math.PI*d.m),'mm'),
+        pair('Base pitch','pbt',fmt3(Math.PI*d.m*Math.cos(d.alphaDeg*Math.PI/180)),'mm')
+      ],{continueTitle:'Tooth thickness continued'});
+
+      subhead('5.6 Sliding');
+      drawTable([
+        row('Specific sliding at the tip','zeta_a',fmt4(d.slip1),fmt4(d.slip2),''),
+        row('Specific sliding at the root','zeta_f',fmt4(-Math.abs(d.slip2||0)),fmt4(-Math.abs(d.slip1||0)),''),
+        pair('Mean specific sliding','zeta_m',fmt4((Math.abs(d.slip1)+Math.abs(d.slip2))/2),'')
+      ],{continueTitle:'Sliding continued'});
+
+      subhead('5.7 Contact ratios');
+      drawTable([
+        pair('Minimal length of contact line','Lmin',fmt3(d.b),'mm'),
+        pair('Transverse contact ratio','epsilon_alpha',fmt3(d.epsAlpha),''),
+        pair('Overlap ratio','epsilon_beta','0.000',''),
+        pair('Total contact ratio','epsilon_gamma',fmt3(d.epsAlpha),''),
+        pair('Length of path of contact','ga',fmt3(d.approachLen+d.recessLen),'mm'),
+        pair('Length of path of approach','',fmt3(d.approachLen),'mm'),
+        pair('Length of path of recess','',fmt3(d.recessLen),'mm')
+      ],{continueTitle:'Contact ratios continued'});
+
+      // Page 8 - general influence factors.
+      newPage('');
+      section('6','General influence factors');
+      subhead('6.1 Forces and circumferential speed');
+      drawTable([
+        pair('Nominal circumferential force at pitch circle','Ft',fmt2(d.Ft),'N'),
+        row('Axial force','Fa','0.00','0.00','N'),
+        row('Radial force','Fr',fmt2(d.Fr),fmt2(d.Fr),'N'),
+        row('Normal force','Fnorm',fmt2(d.Fn),fmt2(d.Fn),'N'),
+        pair('Nominal circumferential force per mm','w',fmt2(d.Ft/d.b),'N/mm'),
+        pair('Circumferential speed reference circle','v',fmt2(d.v),'m/s'),
+        pair('Circumferential speed operating pitch circle','v(dw)',fmt2((2*Math.PI*d.rpm1/60)*d.dw1/2000),'m/s')
+      ],{continueTitle:'Forces continued'});
+
+      subhead('6.2 Calculation of K factors');
+      drawTable([
+        pair('Dynamic factor','Kv',fmt4(d.Kv),''),
+        pair('Face load factor - flank','KHbeta / Km',fmt3(d.Km),''),
+        pair('Face load factor - tooth root','KFbeta',fmt3(Math.max(1,d.Km*0.982)),''),
+        pair('Transverse load factor - flank','KHalpha','1.000',''),
+        pair('Transverse load factor - tooth root','KFalpha','1.000',''),
+        pair('Application factor','KA / Ko',fmt3(d.Ko),''),
+        pair('Mesh load factor','Kgamma','1.000',''),
+        pair('Size factor','Ks',fmt3(d.Ks),''),
+        pair('Rim thickness factor','KB',fmt3(d.KB),'')
+      ],{continueTitle:'K factors continued'});
+
+      // Page 9 - root strength.
+      newPage('');
+      section('7','Calculation of tooth root strength (fracture)');
+      drawTable([
+        row('Geometry factor','J',fmt4(d.J1),fmt4(d.J2),''),
+        row('Tooth form factor','YF','1.447','1.611',''),
+        row('Stress correction factor','YS','2.106','1.913',''),
+        row('Helix angle factor','Ybeta','1.000','1.000',''),
+        row('Deep tooth factor','YDT','1.000','1.000',''),
+        row('Gear rim factor','YB','1.00','1.00',''),
+        row('Effective facewidth','beff',fmt2(26.5),fmt2(d.b),'mm'),
+        row('Tooth root stress','sigmaF',fmt2(d.sigmaF1),fmt2(d.sigmaF2),'N/mm2'),
+        row('Limit strength tooth root','sigmaFG',fmt2(d.allowBend),fmt2(d.allowBend),'N/mm2'),
+        row('Permissible tooth root stress','sigmaFP',fmt2(d.allowBend/1.4),fmt2(d.allowBend/1.4),'N/mm2')
+      ],{continueTitle:'Tooth root strength continued'});
+      subhead('7.1 Safety factors');
+      drawTable([
+        row('Required safety','SFmin','1.40','1.40',''),
+        row('Safety for tooth root stress','SF',fmt2(d.SF1),fmt2(d.SF2),''),
+        row('Transmittable power','kWRating',fmt2(d.P_kW*d.SF1),fmt2(d.P_kW*d.SF2),'kW')
+      ],{continueTitle:'Root safety continued'});
+
+      // Page 10 - flank strength.
+      newPage('');
+      section('8','Calculation of flank strength (pitting)');
+      drawTable([
+        pair('Zone factor','ZH','2.326',''),
+        pair('Elasticity coefficient','ZE','189.812','sqrt(N/mm2)'),
+        pair('Contact ratio factor','Zepsilon','0.922',''),
+        pair('Helix angle factor','Zbeta','1.000',''),
+        pair('Effective facewidth','beff',fmt2(d.b),'mm'),
+        pair('Contact stress','sigmaH',fmt2(d.sigmaH),'N/mm2'),
+        pair('Permissible contact stress','sigmaHP',fmt2(d.allowContact),'N/mm2'),
+        pair('Pitting stress limit','sigmaHG',fmt2(d.allowContact),'N/mm2')
+      ],{continueTitle:'Flank strength continued'});
+      subhead('8.1 Safety factors');
+      drawTable([
+        row('Required safety','SHmin','1.00','1.00',''),
+        row('Safety factor for contact stress','SH',fmt2(d.SH),fmt2(d.SH),''),
+        row('Safety regarding transmittable torque','SH2',fmt2(d.SH*d.SH),fmt2(d.SH*d.SH),''),
+        row('Transmittable power','kWRating',fmt2(d.P_kW*d.SH*d.SH),fmt2(d.P_kW*d.SH*d.SH),'kW'),
+        pair('Minimum safety factor','',fmt2(d.minFOS),'')
+      ],{continueTitle:'Flank safety continued'});
+
+      // Page 11 - measurements and tolerances.
+      newPage('');
+      section('9','Measurements for tooth thickness');
+      subhead('9.1 Tooth thickness tolerances');
+      drawTable([
+        row('Number of teeth for span measurement','k',d.k1,d.k2,''),
+        row('Base tangent length / span measurement','W',fmt3(d.W1),fmt3(d.W2),'mm'),
+        row('Span tolerance','Wtol',`+/-${fmt4(d.Wtol1)}`,`+/-${fmt4(d.Wtol2)}`,'mm'),
+        pair('Measuring pin diameter','',fmt3(d.pinDia),'mm'),
+        row('Measurement over pins','M',fmt2(d.overPins1),fmt2(d.overPins2),'mm'),
+        pair('Backlash minimum','j',fmt3(d.backlash),'mm')
+      ],{continueTitle:'Measurements continued'});
+
+      section('10','Toothing tolerances');
+      drawTable([
+        row('Diameter tolerance','',`+/-${fmt4(d.tolDia1)}`,`+/-${fmt4(d.tolDia2)}`,'mm'),
+        row('Runout','Fr',fmt4(d.runout1),fmt4(d.runout2),'mm'),
+        row('Pitch tolerance','fpt',fmt4(d.fpt1),fmt4(d.fpt2),'mm'),
+        row('Total composite deviation','Fi',fmt4(d.Fi1),fmt4(d.Fi2),'mm'),
+        row('Backlash','j',fmt3(d.backlash),fmt3(d.backlash),'mm')
+      ],{continueTitle:'Toothing tolerances continued'});
+
+      // Replace total page placeholders.
+      if(typeof doc.putTotalPages === 'function'){
+        doc.putTotalPages(totalPagesExp);
+      }
+
+      const blob=doc.output('blob');
+      const blobUrl=URL.createObjectURL(blob);
+      if(window._lastGeneratedGearPdfUrl){
+        try{ URL.revokeObjectURL(window._lastGeneratedGearPdfUrl); }catch(revokeErr){}
+      }
+      window._lastGeneratedGearPdfUrl=blobUrl;
+      if(previewFrame){ previewFrame.src=blobUrl; }
+      if(openLink){ openLink.href=blobUrl; }
+      if(downloadLink){ downloadLink.href=blobUrl; downloadLink.download=filename; }
+      if(viewerCard){
+        viewerCard.style.display='block';
+        setTimeout(()=>viewerCard.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+      }
+      if(actionPanel){
+        actionPanel.innerHTML=`PDF preview generated below. <a href="${blobUrl}" target="_blank" rel="noopener">Open Full Screen</a> <a href="${blobUrl}" download="${filename}">Download PDF</a>`;
+      }
+    }catch(err){
+      console.error(err);
+      if(viewerCard){ viewerCard.style.display='none'; }
+      if(actionPanel){
+        actionPanel.style.display='block';
+        actionPanel.innerHTML='PDF preview failed. Please try again.';
+      }
+      alert('PDF preview failed. Please try again.');
+    }
+  }
+
+  updateShiftUI();
+  calculateAll();
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

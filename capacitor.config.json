@@ -1,0 +1,9 @@
+{
+  "appId": "com.spurgear.calculator",
+  "appName": "Spur Gear Calculator",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
